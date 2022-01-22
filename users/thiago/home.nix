@@ -2,17 +2,14 @@
 
 {
 
-  imports = [
-    ./dotfiles/git.nix
-    ./dotfiles/tmux.nix
-    ./dotfiles/neovim.nix
-  ];
+  imports = [ ./dotfiles/git.nix ./dotfiles/tmux.nix ./dotfiles/neovim.nix ];
 
   home = {
     packages = with pkgs; [
       tree
       file
       fd
+      golangci-lint
       mosh
       highlight
       rust-analyzer
@@ -31,14 +28,10 @@
       rustc
       cargo
       nodePackages.node2nix
+      nixfmt
       nodePackages.typescript-language-server
 
-      (python39.withPackages (ps: with ps; [
-        pip
-        powerline
-        pygments
-        pynvim
-      ]))
+      (python39.withPackages (ps: with ps; [ pip powerline pygments pynvim ]))
     ];
   };
 
