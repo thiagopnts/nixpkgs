@@ -7,10 +7,17 @@ vim.api.nvim_exec(
   [[
   augroup Packer
     autocmd!
-    autocmd BufWritePost init.lua PackerCompile
+    autocmd BufWritePost start.lua PackerCompile
   augroup end
 ]],
   false
+)
+
+vim.api.nvim_exec(
+  [[
+  autocmd! VimEnter * nested NvimTreeClose
+]],
+  true
 )
 
 
@@ -20,6 +27,7 @@ require("packer").startup(
   function()
     -- Package manager itself
     use "wbthomason/packer.nvim"
+    use "github/copilot.vim"
     use "ray-x/lsp_signature.nvim" -- show function signature when you type
     use "cespare/vim-toml" -- toml syntax highlight
     use "axelf4/vim-strip-trailing-whitespace" -- remove trailing whitespace
@@ -185,29 +193,14 @@ require("packer").startup(
     use {
       "kyazdani42/nvim-tree.lua",
       config = function()
-        require('nvim-tree').setup {
-          open_on_setup = 0,
-          auto_close = 0,
-          open_on_tab = 0,
-          update_focused_file = {enable = 1},
-          filters = {
-            dotfiles = 1,
-            custom = {".git", "node_modules", ".cache"},
-          }
-        }
         vim.g.nvim_tree_side = "left"
         vim.g.nvim_tree_width = 25
         vim.g.nvim_tree_disable_window_picker = 1
-        vim.g.nvim_tree_quit_on_open = 0
         vim.g.nvim_tree_indent_markers = 1
         vim.g.nvim_tree_git_hl = 1
+        vim.g.nvim_tree_quit_on_open = 1
         vim.g.nvim_tree_root_folder_modifier = ":t"
         vim.g.nvim_tree_allow_resize = 1
-        vim.g.nvim_tree_show_icons = {
-          git = 0,
-          folders = 1,
-          files = 1
-        }
         vim.g.nvim_tree_icons = {
           default = " ",
           symlink = "📁",
@@ -220,6 +213,21 @@ require("packer").startup(
             symlink_open = "📁"
           }
         }
+        require('nvim-tree').setup {
+          open_on_setup = false,
+          auto_close = false,
+          open_on_tab = false,
+          update_focused_file = {enable = false},
+          git = {
+            enable = false,
+            auto_open = false,
+          },
+          filters = {
+            dotfiles = true,
+            custom = {".git", "node_modules", ".cache"},
+          }
+        }
+
       end
     }
     use {
