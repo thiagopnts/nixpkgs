@@ -24,13 +24,6 @@ null_ls.setup({
 	end,
 })
 
-local no_fmt_attach = function(client, bufnr)
-	-- disable formatting in all lang servers, we want to use null-ls for formatting instead
-	client.resolved_capabilities.document_formatting = false
-	client.resolved_capabilities.document_range_formatting = false
-	on_attach(client, bufnr)
-end
-
 local on_attach = function(client, bufnr)
 	-- make diagnostics pop out from virtual text thats not wraped
 	--vim.api.nvim_command('autocmd CursorHold <buffer> lua vim.lsp.util.show_line_diagnostics()')
@@ -74,6 +67,13 @@ local on_attach = function(client, bufnr)
 	vim.api.nvim_buf_set_keymap(bufnr, "n", "]d", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>", opts)
 	vim.api.nvim_buf_set_keymap(bufnr, "n", "<space>q", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>", opts)
 	vim.api.nvim_buf_set_keymap(bufnr, "n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+end
+
+local no_fmt_attach = function(client, bufnr)
+	-- disable formatting in all lang servers, we want to use null-ls for formatting instead
+	client.resolved_capabilities.document_formatting = false
+	client.resolved_capabilities.document_range_formatting = false
+	on_attach(client, bufnr)
 end
 
 local capabilities = require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities())
