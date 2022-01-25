@@ -35,6 +35,19 @@ require("packer").startup(function()
 	use("nvim-treesitter/nvim-treesitter-textobjects")
 	use("jose-elias-alvarez/null-ls.nvim")
 	use({
+		"mattn/emmet-vim", -- rust lang support
+		config = function()
+		    vim.g.user_emmet_install_global = 0
+		    vim.g.user_emmet_leader_key = "<TAB>"
+		    vim.api.nvim_exec(
+		      [[
+		      FileType html,css EmmetInstall
+		    ]],
+		      false
+		    )
+		end,
+	})
+	use({
 		"folke/trouble.nvim", -- rust lang support
 		config = function()
 			require("trouble").setup({})
@@ -47,11 +60,15 @@ require("packer").startup(function()
 	use("hashivim/vim-terraform")
 	use("tpope/vim-surround") -- classic surround plugin
 	use("TovarishFin/vim-solidity")
+	-- lsp cmp stuff
+	use("neovim/nvim-lspconfig") -- client for language servers
 	use("hrsh7th/cmp-nvim-lsp")
 	use("hrsh7th/cmp-buffer")
-	use("hrsh7th/nvim-cmp") -- auto completion plugin
+	use("hrsh7th/cmp-path")
+	use("hrsh7th/cmp-cmdline")
 	use("hrsh7th/cmp-vsnip")
 	use("hrsh7th/vim-vsnip") -- snippets
+	use("hrsh7th/nvim-cmp") -- auto completion plugin
 	use("phaazon/hop.nvim")
 	use("LnL7/vim-nix") -- nix syntax support
 	use("simrat39/rust-tools.nvim") -- extra rust functionality(e.g. inlay hints etc)
@@ -76,7 +93,6 @@ require("packer").startup(function()
 			require("nvim-treesitter.configs").setup({ highlight = { enable = true } })
 		end,
 	})
-	use("neovim/nvim-lspconfig") -- client for language servers
 	use("glepnir/lspsaga.nvim")
 	use({
 		"bkad/CamelCaseMotion", -- can jump between camel|snakecase words
@@ -283,10 +299,26 @@ require("packer").startup(function()
 end)
 vim.api.nvim_command("colorscheme jellybeans")
 
+local lspkind = require("lspkind")
+
 local cmp = require("cmp")
+
 cmp.setup({
 	documentation = {
 		border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+	},
+	mapping = {
+		["<C-e>"] = cmp.mapping({
+			i = cmp.mapping.abort(),
+			c = cmp.mapping.close(),
+		}),
+		["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+	},
+	formatting = {
+		format = lspkind.cmp_format({
+			with_text = false, -- do not show text alongside icons
+			maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+		}),
 	},
 	snippet = {
 		expand = function(args)
@@ -294,25 +326,12 @@ cmp.setup({
 			vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` user.
 		end,
 	},
-	mapping = {
-		["<C-p>"] = cmp.mapping.scroll_docs(-4),
-		["<C-n>"] = cmp.mapping.scroll_docs(4),
-		["<C-Space>"] = cmp.mapping.complete(),
-		["<C-e>"] = cmp.mapping.close(),
-		["<CR>"] = cmp.mapping.confirm({ select = true }),
-	},
-	sources = {
+	sources = cmp.config.sources({
 		{ name = "nvim_lsp" },
-		{ name = "buffer" },
 		{ name = "vsnip" },
-	},
-	formatting = {
-		format = function(_, vim_item)
-			vim.cmd("packadd lspkind-nvim")
-			vim_item.kind = require("lspkind").presets.default[vim_item.kind] .. "  " .. vim_item.kind
-			return vim_item
-		end,
-	},
+	}, {
+		{ name = "buffer" },
+	}),
 })
 
 local saga = require("lspsaga")

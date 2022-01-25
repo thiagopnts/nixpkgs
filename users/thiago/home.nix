@@ -30,7 +30,8 @@
       nodePackages.node2nix
       nixfmt
       nodePackages.typescript-language-server
-
+      nodePackages.prettier
+      nodePackages.vscode-html-languageserver-bin
       (python39.withPackages (ps: with ps; [ pip powerline pygments pynvim ]))
     ];
   };

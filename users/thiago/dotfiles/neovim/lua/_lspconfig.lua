@@ -158,6 +158,7 @@ local lsps = {
 	rust_analyzer = { on_attach = on_attach, capabilities = capabilities },
 	--phpactor = {on_attach = on_attach, capabilities = capabilities},
 	bashls = { on_attach = on_attach, capabilities = capabilities },
+	html = { cmd = { "html-languageserver", "--stdio" }, on_attach = on_attach, capabilities = capabilities },
 	rnix = { on_attach = no_fmt_attach, capabilities = capabilities },
 	diagnosticls = {
 		on_attach = on_attach,
