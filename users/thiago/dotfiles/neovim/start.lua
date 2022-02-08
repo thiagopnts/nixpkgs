@@ -25,6 +25,7 @@ local use = require("packer").use
 require("packer").startup(function()
 	-- Package manager itself
 	use("wbthomason/packer.nvim")
+	use("j-hui/fidget.nvim")
 	use("github/copilot.vim")
 	use("ray-x/lsp_signature.nvim") -- show function signature when you type
 	use("cespare/vim-toml") -- toml syntax highlight
