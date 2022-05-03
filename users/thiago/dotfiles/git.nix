@@ -30,15 +30,10 @@
         core.editor = "nvim";
         status = { showUntrackedFiles = "all"; };
         remote = {
-          push = [
-            "refs/heads/*:refs/heads/*"
-            "refs/tags/*:refs/tags/*"
-          ];
+          push = [ "refs/heads/*:refs/heads/*" "refs/tags/*:refs/tags/*" ];
 
-          fetch = [
-            "refs/heads/*:refs/remotes/origin/*"
-            "refs/tags/*:refs/tags/*"
-          ];
+          fetch =
+            [ "refs/heads/*:refs/remotes/origin/*" "refs/tags/*:refs/tags/*" ];
         };
 
         color = {
@@ -50,13 +45,9 @@
           };
         };
 
-        push = {
-          default = "simple";
-        };
+        push = { default = "simple"; };
 
-        pull = {
-          rebase = true;
-        };
+        pull = { rebase = true; };
 
         rebase = {
           stat = true;

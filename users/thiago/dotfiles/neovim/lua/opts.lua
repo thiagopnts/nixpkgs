@@ -11,7 +11,7 @@ opt.expandtab = true
 opt.encoding = "utf-8"
 opt.autoindent = true
 opt.fileencoding = "utf-8"
-opt.fileencodings = {"utf-8"}
+opt.fileencodings = { "utf-8" }
 opt.backup = false
 opt.writebackup = false
 opt.swapfile = false
@@ -27,5 +27,7 @@ opt.ignorecase = true
 opt.scrolloff = 999 -- keep cursor centered
 opt.hlsearch = false
 
-vim.o.completeopt = 'menu,menuone,noselect'
-vim.o.inccommand = 'nosplit'
+vim.o.completeopt = "menu,menuone,noselect"
+vim.o.inccommand = "nosplit"
+vim.o.clipboard = "unnamedplus"
+vim.cmd("set termguicolors")

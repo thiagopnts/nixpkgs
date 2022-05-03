@@ -26,6 +26,8 @@
       nixpkgs-review
       pypi2nix
       rustc
+      rustfmt
+      clippy
       cargo
       nodePackages.node2nix
       nixfmt
@@ -33,12 +35,24 @@
       nodePackages.pyright
       nodePackages.prettier
       nodePackages.vscode-html-languageserver-bin
+      rust.packages.stable.rustPlatform.rustLibSrc
+
       (python39.withPackages
         (ps: with ps; [ pip powerline pygments pynvim pipenv ]))
     ];
   };
 
+  home.sessionVariables = {
+    RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
+  };
+
   programs = {
+    bash = {
+      enable = true;
+      initExtra = ''
+        . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+      '';
+    };
     home-manager.enable = true;
     gpg.enable = true;
     fzf.enable = true;

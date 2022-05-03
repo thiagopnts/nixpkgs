@@ -25,7 +25,12 @@ local use = require("packer").use
 require("packer").startup(function()
 	-- Package manager itself
 	use("wbthomason/packer.nvim")
-	use("j-hui/fidget.nvim")
+	use({
+		"j-hui/fidget.nvim",
+		config = function()
+			require("fidget").setup({})
+		end,
+	})
 	use("github/copilot.vim")
 	use("ray-x/lsp_signature.nvim") -- show function signature when you type
 	use("cespare/vim-toml") -- toml syntax highlight
@@ -34,20 +39,22 @@ require("packer").startup(function()
 	use("tpope/vim-fugitive")
 	use("christoomey/vim-tmux-navigator")
 	use("nvim-treesitter/nvim-treesitter-textobjects")
+	use("folke/lsp-colors.nvim") -- this creates missing LSP diagnostics highlight groups(e.g. my jellybeans colorscheme :D)
 	use("jose-elias-alvarez/null-ls.nvim")
-	use({
-		"mattn/emmet-vim", -- rust lang support
-		config = function()
-		    vim.g.user_emmet_install_global = 0
-		    vim.g.user_emmet_leader_key = "<TAB>"
-		    vim.api.nvim_exec(
-		      [[
-		      FileType html,css EmmetInstall
-		    ]],
-		      false
-		    )
-		end,
-	})
+	--	use("HallerPatrick/py_lsp.nvim")
+	--	use({
+	--		"mattn/emmet-vim", -- rust lang support
+	--		config = function()
+	--			vim.g.user_emmet_install_global = 0
+	--			vim.g.user_emmet_leader_key = "<TAB>"
+	--			vim.api.nvim_exec(
+	--				[[
+	--		      FileType html,css EmmetInstall
+	--		    ]],
+	--				false
+	--			)
+	--		end,
+	--	})
 	use({
 		"folke/trouble.nvim", -- rust lang support
 		config = function()
@@ -58,18 +65,20 @@ require("packer").startup(function()
 	use("rktjmp/lush.nvim")
 	use("~/src/jellybeans")
 	use("tpope/vim-repeat") -- repeat unrepeatable commands
+	use("andweeb/presence.nvim")
 	use("hashivim/vim-terraform")
 	use("tpope/vim-surround") -- classic surround plugin
 	use("TovarishFin/vim-solidity")
 	-- lsp cmp stuff
 	use("neovim/nvim-lspconfig") -- client for language servers
 	use("hrsh7th/cmp-nvim-lsp")
+	use("jamestthompson3/nvim-remote-containers")
 	use("hrsh7th/cmp-buffer")
 	use("hrsh7th/cmp-path")
 	use("hrsh7th/cmp-cmdline")
 	use("hrsh7th/cmp-vsnip")
 	use("hrsh7th/vim-vsnip") -- snippets
-	use("hrsh7th/nvim-cmp") -- auto completion plugin
+--	use("hrsh7th/nvim-cmp") -- auto completion plugin
 	use("phaazon/hop.nvim")
 	use("LnL7/vim-nix") -- nix syntax support
 	use("simrat39/rust-tools.nvim") -- extra rust functionality(e.g. inlay hints etc)
@@ -90,9 +99,6 @@ require("packer").startup(function()
 	use({
 		"nvim-treesitter/nvim-treesitter",
 		run = ":TSUpdate",
-		config = function()
-			require("nvim-treesitter.configs").setup({ highlight = { enable = true } })
-		end,
 	})
 	use("glepnir/lspsaga.nvim")
 	use({
@@ -112,13 +118,20 @@ require("packer").startup(function()
 		end,
 	})
 	-- vim-go like
+	-- commented out to try ray-x/go.nvim
+	--	use({
+	--		"crispgm/nvim-go",
+	--		config = function()
+	--			require("go").setup({ auto_lint = false })
+	--		end,
+	--	})
 	use({
-		"crispgm/nvim-go",
+		"ray-x/go.nvim",
 		config = function()
 			require("go").setup({ auto_lint = false })
 		end,
 	})
-	-- lsp based rust settings
+
 	use({
 		"lewis6991/gitsigns.nvim", -- git.... signs
 		config = function()
@@ -144,7 +157,7 @@ require("packer").startup(function()
 					["n <leader>hp"] = '<cmd>lua require"gitsigns".preview_hunk()<CR>',
 					["n <leader>hb"] = '<cmd>lua require"gitsigns".blame_line()<CR>',
 				},
-				watch_index = {
+				watch_gitdir = {
 					interval = 100,
 				},
 				sign_priority = 5,
@@ -176,14 +189,14 @@ require("packer").startup(function()
 			})
 		end,
 	})
-	use({
-		"andweeb/presence.nvim",
-		config = function()
-			--        require("presence"):setup {
-			--          editing_text = "Coding %s",
-			--        }
-		end,
-	})
+	--	use({
+	--		"andweeb/presence.nvim",
+	--		config = function()
+	--			--        require("presence"):setup {
+	--			--          editing_text = "Coding %s",
+	--			--        }
+	--		end,
+	--	})
 	use({
 		"lukas-reineke/indent-blankline.nvim",
 		config = function()
@@ -206,28 +219,28 @@ require("packer").startup(function()
 		config = function()
 			vim.g.nvim_tree_side = "left"
 			vim.g.nvim_tree_width = 25
-			vim.g.nvim_tree_disable_window_picker = 1
-			vim.g.nvim_tree_indent_markers = 1
 			vim.g.nvim_tree_git_hl = 1
-			vim.g.nvim_tree_quit_on_open = 1
 			vim.g.nvim_tree_root_folder_modifier = ":t"
 			vim.g.nvim_tree_allow_resize = 1
-			vim.g.nvim_tree_icons = {
-				default = " ",
-				symlink = "📁",
-				folder = {
-					default = "📁",
-					open = "📁",
-					symlink = "📁",
-					empty = "📁",
-					empty_open = "📁",
-					symlink_open = "📁",
-				},
-			}
+			--			vim.g.nvim_tree_icons = {
+			--				default = " ",
+			--				symlink = "📁",
+			--				folder = {
+			--					default = "📁",
+			--					open = "📁",
+			--					symlink = "📁",
+			--					empty = "📁",
+			--					empty_open = "📁",
+			--					symlink_open = "📁",
+			--				},
+			--			}
 			require("nvim-tree").setup({
 				open_on_setup = false,
 				auto_close = false,
 				open_on_tab = false,
+				indent_markers = true,
+				disable_window_picker = true,
+				quit_on_open = true,
 				update_focused_file = { enable = false },
 				git = {
 					enable = false,
@@ -240,11 +253,18 @@ require("packer").startup(function()
 			})
 		end,
 	})
+	use("nvim-telescope/telescope-fzy-native.nvim")
 	use({
 		"nvim-telescope/telescope.nvim",
 		requires = { { "nvim-lua/popup.nvim" }, { "nvim-lua/plenary.nvim" } },
 		config = function()
 			require("telescope").setup({
+				extensions = {
+					fzy_native = {
+						override_generic_sorter = false,
+						override_file_sorter = true,
+					},
+				},
 				defaults = {
 					vimgrep_arguments = {
 						"rg",
@@ -295,6 +315,7 @@ require("packer").startup(function()
 					},
 				},
 			})
+			require("telescope").load_extension("fzy_native")
 		end,
 	})
 end)
@@ -302,45 +323,52 @@ vim.api.nvim_command("colorscheme jellybeans")
 
 local lspkind = require("lspkind")
 
-local cmp = require("cmp")
+--local cmp = require("cmp")
 
 cmp.setup({
-	documentation = {
-		border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
-	},
-	mapping = {
-		["<C-e>"] = cmp.mapping({
-			i = cmp.mapping.abort(),
-			c = cmp.mapping.close(),
-		}),
-		["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-	},
-	formatting = {
-		format = lspkind.cmp_format({
-			with_text = false, -- do not show text alongside icons
-			maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
-		}),
-	},
 	snippet = {
+		-- REQUIRED - you must specify a snippet engine
 		expand = function(args)
-			-- For `vsnip` user.
-			vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` user.
+			vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+			-- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+			-- require('snippy').expand_snippet(args.body) -- For `snippy` users.
+			-- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
 		end,
 	},
+	window = {
+		-- completion = cmp.config.window.bordered(),
+		-- documentation = cmp.config.window.bordered(),
+	},
+	mapping = cmp.mapping.preset.insert({
+		["<C-b>"] = cmp.mapping.scroll_docs(-4),
+		["<C-f>"] = cmp.mapping.scroll_docs(4),
+		["<C-Space>"] = cmp.mapping.complete(),
+		["<C-e>"] = cmp.mapping.abort(),
+		["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+	}),
 	sources = cmp.config.sources({
 		{ name = "nvim_lsp" },
-		{ name = "vsnip" },
+		{ name = "vsnip" }, -- For vsnip users.
+		-- { name = 'luasnip' }, -- For luasnip users.
+		-- { name = 'ultisnips' }, -- For ultisnips users.
+		-- { name = 'snippy' }, -- For snippy users.
 	}, {
 		{ name = "buffer" },
 	}),
 })
 
+local signs = { Error = "●", Warn = "●", Hint = " ", Info = " " }
+for type, icon in pairs(signs) do
+	local hl = "DiagnosticSign" .. type
+	vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+end
+
 local saga = require("lspsaga")
 saga.init_lsp_saga({
 	error_sign = "●",
 	warn_sign = "●",
-	hint_sign = "●",
-	infor_sign = "●",
+	hint_sign = " ",
+	infor_sign = " ",
 	rename_prompt_prefix = "",
 })
 
@@ -375,6 +403,7 @@ local rust_tools_opts = {
 }
 
 require("rust-tools").setup(rust_tools_opts)
+--require("py_lsp").setup()
 
 require("hop").setup()
 

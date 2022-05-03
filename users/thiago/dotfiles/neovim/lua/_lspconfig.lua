@@ -7,7 +7,7 @@ local sources = {
 	null_ls.builtins.formatting.stylua,
 	null_ls.builtins.formatting.nixfmt,
 	null_ls.builtins.diagnostics.write_good,
-	null_ls.builtins.diagnostics.golangci_lint,
+	--	null_ls.builtins.diagnostics.golangci_lint,
 	null_ls.builtins.code_actions.gitsigns,
 }
 null_ls.setup({
@@ -23,6 +23,10 @@ null_ls.setup({
 		end
 	end,
 })
+
+--vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+--	underline = true,
+--})
 
 local on_attach = function(client, bufnr)
 	-- make diagnostics pop out from virtual text thats not wraped
@@ -68,6 +72,8 @@ local on_attach = function(client, bufnr)
 	vim.api.nvim_buf_set_keymap(bufnr, "n", "<space>q", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>", opts)
 	vim.api.nvim_buf_set_keymap(bufnr, "n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
 end
+
+vim.api.nvim_exec([[ autocmd BufWritePre *.go :silent! lua require('go.format').goimport() ]], false)
 
 local no_fmt_attach = function(client, bufnr)
 	-- disable formatting in all lang servers, we want to use null-ls for formatting instead
