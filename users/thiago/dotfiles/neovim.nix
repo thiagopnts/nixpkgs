@@ -6,7 +6,7 @@
     recursive = true;
   };
   programs.neovim = {
-    package = pkgs.neovim-unwrapped;
+    package = pkgs.neovim-nightly;
     enable = true;
     vimAlias = true;
     plugins = with pkgs; [ vimPlugins.packer-nvim ];

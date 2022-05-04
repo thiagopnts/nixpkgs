@@ -78,7 +78,7 @@ require("packer").startup(function()
 	use("hrsh7th/cmp-cmdline")
 	use("hrsh7th/cmp-vsnip")
 	use("hrsh7th/vim-vsnip") -- snippets
---	use("hrsh7th/nvim-cmp") -- auto completion plugin
+	use("hrsh7th/nvim-cmp") -- auto completion plugin
 	use("phaazon/hop.nvim")
 	use("LnL7/vim-nix") -- nix syntax support
 	use("simrat39/rust-tools.nvim") -- extra rust functionality(e.g. inlay hints etc)
@@ -253,7 +253,7 @@ require("packer").startup(function()
 			})
 		end,
 	})
-	use("nvim-telescope/telescope-fzy-native.nvim")
+	use({ "nvim-telescope/telescope-fzy-native.nvim", run = "make" })
 	use({
 		"nvim-telescope/telescope.nvim",
 		requires = { { "nvim-lua/popup.nvim" }, { "nvim-lua/plenary.nvim" } },
@@ -323,7 +323,7 @@ vim.api.nvim_command("colorscheme jellybeans")
 
 local lspkind = require("lspkind")
 
---local cmp = require("cmp")
+local cmp = require("cmp")
 
 cmp.setup({
 	snippet = {

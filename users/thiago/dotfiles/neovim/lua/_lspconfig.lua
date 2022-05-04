@@ -13,7 +13,7 @@ local sources = {
 null_ls.setup({
 	sources = sources,
 	on_attach = function(client)
-		if client.resolved_capabilities.document_formatting then
+		if client.server_capabilities.document_formatting then
 			vim.cmd([[
             augroup LspFormatting
                 autocmd! * <buffer>
@@ -77,8 +77,8 @@ vim.api.nvim_exec([[ autocmd BufWritePre *.go :silent! lua require('go.format').
 
 local no_fmt_attach = function(client, bufnr)
 	-- disable formatting in all lang servers, we want to use null-ls for formatting instead
-	client.resolved_capabilities.document_formatting = false
-	client.resolved_capabilities.document_range_formatting = false
+	client.server_capabilities.document_formatting = false
+	client.server_capabilities.document_range_formatting = false
 	on_attach(client, bufnr)
 end
 
