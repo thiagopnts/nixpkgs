@@ -2,12 +2,13 @@
 
 {
 
-  imports = [ ./dotfiles/git.nix ./dotfiles/tmux.nix ./dotfiles/neovim.nix ];
+  imports = [ ./dotfiles/git.nix ./dotfiles/tmux.nix ./dotfiles/neovim.nix ./dotfiles/kitty.nix ];
 
   home = {
     packages = with pkgs; [
       tree
       file
+      cascadia-code
       fd
       golangci-lint
       mosh
