@@ -27,7 +27,8 @@ opt.ignorecase = true
 opt.scrolloff = 999 -- keep cursor centered
 opt.hlsearch = false
 
-vim.o.completeopt = "menu,menuone,noselect"
+--vim.o.completeopt = "menu,menuone,noselect"
 vim.o.inccommand = "nosplit"
 vim.o.clipboard = "unnamedplus"
+vim.o.guifont = "CaskaydiaCove Nerd Font:h16"
 vim.cmd("set termguicolors")
