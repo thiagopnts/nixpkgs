@@ -23,6 +23,7 @@ vim.api.nvim_exec(
 -- prepare to define plugins
 local use = require("packer").use
 require("packer").startup(function()
+  use "folke/lua-dev.nvim"
   use {
     'junnplus/nvim-lsp-setup',
     requires = {
@@ -30,7 +31,11 @@ require("packer").startup(function()
       'williamboman/nvim-lsp-installer',
     }
   }
-  use "rebelot/kanagawa.nvim"
+  use("rebelot/kanagawa.nvim")
+  use({ "esensar/nvim-dev-container", requires = { 'nvim-treesitter/nvim-treesitter' }, config = function()
+    require("devcontainer").setup {}
+
+  end })
   use("folke/tokyonight.nvim")
   -- Package manager itself
   use("wbthomason/packer.nvim")
@@ -41,6 +46,7 @@ require("packer").startup(function()
     end,
   })
   use({
+    -- currently not integrated with anything I guess.
     'rcarriga/nvim-notify',
     config = function()
       require('notify').setup({
@@ -65,8 +71,6 @@ require("packer").startup(function()
         },
         ]]
       })
-      vim.notify = require("notify")
-
     end
   })
   use("github/copilot.vim")
@@ -320,7 +324,7 @@ local cmp = require("cmp")
 cmp.setup({
   formatting = {
     format = lspkind.cmp_format({
-      mode = 'symbol', -- show only symbol annotations
+      mode = 'symbol_text', -- show only symbol annotations
       maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
 
       -- The function below will be called before any actual modifications from lspkind
@@ -386,6 +390,9 @@ cmp.setup({
 --})
 
 require('nvim-lsp-setup').setup({
+  installer = {
+    automatic_installation = true,
+  },
   ensure_installed = {
     "bashls",
     "tsserver",
@@ -394,11 +401,32 @@ require('nvim-lsp-setup').setup({
     "golangci_lint_ls",
     "gopls",
   },
-  automatic_installation = true,
   servers = {
     bashls = {},
     tsserver = {},
-    sumneko_lua = {},
+    rust_analyzer = require('nvim-lsp-setup.rust-tools').setup({
+      server = {
+        settings = {
+          ['rust-analyzer'] = {
+            cargo = {
+              loadOutDirsFromCheck = true,
+            },
+            procMacro = {
+              enable = true,
+            },
+          },
+        },
+      },
+    }),
+    sumneko_lua = require('lua-dev').setup({
+      lspconfig = {
+        on_attach = function(client, _)
+          -- Avoiding LSP formatting conflicts.
+          -- https://github.com/jose-elias-alvarez/null-ls.nvim/wiki/Avoiding-LSP-formatting-conflicts
+          require('nvim-lsp-setup.utils').disable_formatting(client)
+        end,
+      },
+    }),
     psalm = {},
     --  golangci_lint_ls = {},
     gopls = {},
